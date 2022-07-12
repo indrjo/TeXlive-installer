@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+tlroot=~/texlive/$(date +%Y)
+
+# Write paths to make your TeXlive usable.
+cat <<EOF > ~/.tlrc
+#!/bin/sh
+export PATH=$tlroot/bin/x86_64-linux:\$PATH
+export MANPATH=$tlroot/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=$tlroot/texmf-dist/doc/info:\$INFOPATH
+EOF
+
+. ~/.tlrc
+
+# Some packages we cannot live without, but that
+# are not packaged in the minimal installation.
+tlmgr install latex
+tlmgr install latex-bin
+tlmgr install texdoc
+tlmgr install texliveonfly
+
+
+cat <<EOF
+#
+# *************************
+# * Task left to the user *
+# *************************
+#
+# Append the following line at the
+# end of (for example) '~/.bashrc':
+#
+#   . ~/.tlrc
+#
+# and source it afterwards.
+#
+# By the way, I have done my work.
+#
+# Bye :)
+#
+EOF
+

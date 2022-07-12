@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+
+# The url you get the installer from.
+install_tl_url="https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz"
+
+# Try to reach the url above before. If it is not reacheable, die.
+wget -q --spider $install_tl_url
+if [[ ! $? -eq "0" ]]
+  then
+    echo " :: cannot reach $install_tl_url!"
+    exit 1
+fi
+
+# Get the compressed folder 'install-tl-unx.tar.gz' from the net, and then
+# decompress all its content into a new folder called 'install-tl'. We move
+# there and start the installer program, 'install-tl'.
+wget $install_tl_url
+[ -d install-tl ] || mkdir ./install-tl
+cd ./install-tl
+tar -xzf ../install-tl-unx.tar.gz --strip-components 1
+
+# This is the point where the actual installation process starts. It is
+# better to give some details:
+#
+#   * TEXLIVE_INSTALL_PREFIX is the environment variable that says where to
+#     install everything. It defaults to '/usr/bin/local/texlive', but we
+#     choose '$HOME/texlive' (so that you don't need admin's privileges).
+#
+#   * We choose the 'minimal' scheme.
+#
+# The unique intervent from the user should be to confirm the details of
+# the installation by typing 'I' and hitting the `Enter` key.
+TEXLIVE_INSTALL_PREFIX=~/texlive ./install-tl --scheme minimal
+
+# Eventually, remove all the useless clutter.
+#cd ..; rm -rf ./install-tl*
+
+cat <<EOF
+#
+# INSTALLATION COMPLETE!
+#
+# Eventually, you may remove 'install-tl' and
+# 'install-tl-unx.tar.gz'. This task is left
+# to the user.
+#
+# Now it's time for post-install refinements.
+#
+# :)
+#
+EOF
+
